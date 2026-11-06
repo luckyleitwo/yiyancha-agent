@@ -1,0 +1,38 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin: 22px 0;
+
+  dt {
+    margin-bottom: 5px;
+    color: #a69bad;
+    font-size: 11px;
+  }
+
+  dd {
+    margin: 0;
+    color: #4e4660;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+
+  button {
+    height: auto;
+    padding: 0;
+    font-size: inherit;
+    text-align: left;
+    white-space: normal;
+  }
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 17px;
+  }
+}

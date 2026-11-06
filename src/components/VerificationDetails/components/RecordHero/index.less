@@ -1,0 +1,40 @@
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+
+  > div {
+    min-width: 0;
+  }
+
+  h2 {
+    margin: 0;
+    color: #3e3451;
+    font-size: 18px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+  }
+
+  p {
+    margin: 5px 0 0;
+    color: #a99fb5;
+    font-size: 10px;
+    overflow-wrap: anywhere;
+  }
+
+  :global(.ant-tag) {
+    font-size: 10px;
+    font-weight: 400;
+  }
+}
+
+.icon {
+  display: grid;
+  flex: none;
+  padding: 15px;
+  place-items: center;
+  border-radius: 11px;
+  background: #f1ebfc;
+  color: #8d69ca;
+}

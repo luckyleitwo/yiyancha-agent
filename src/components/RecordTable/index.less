@@ -1,0 +1,41 @@
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  color: #9294a6;
+  font-size: 12px;
+}
+
+.current {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 29px;
+  height: 29px;
+  border-radius: 5px;
+  color: white;
+  background: #6954d9;
+}
+
+.table {
+  :global(.ant-table) {
+    font-size: 12px;
+  }
+
+  :global(.ant-table-thead > tr > th) {
+    color: #9294a6;
+    font-weight: 400;
+    background: #fafbfd;
+  }
+
+  :global(.ant-table-thead > tr > th::before) {
+    display: none;
+  }
+
+  :global(.ant-table-tbody > tr > td) {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+}

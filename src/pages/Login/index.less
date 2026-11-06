@@ -1,0 +1,49 @@
+.page {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: radial-gradient(circle at top, #eeeaff, #f6f7fb 55%);
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  background: #fff;
+  border: 1px solid #eceef4;
+  border-radius: 16px;
+  box-shadow: 0 16px 48px rgb(42 34 91 / 8%);
+
+  h1 {
+    margin: 36px 0 8px;
+    color: #252638;
+    font-size: 26px;
+  }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #252638;
+  font-size: 20px;
+  font-weight: 600;
+
+  img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.subtitle {
+  margin: 0 0 28px;
+  color: #747589;
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 28px 24px;
+  }
+}
