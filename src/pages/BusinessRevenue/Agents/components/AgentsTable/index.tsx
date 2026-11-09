@@ -167,6 +167,7 @@ export default function AgentsTable({
       toolBarRender={() => [
         <Button
           key="export"
+          type="primary"
           icon={<DownloadOutlined />}
           onClick={() => onAction('导出')}
         >

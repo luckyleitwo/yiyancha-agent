@@ -16,7 +16,7 @@ export default function Login() {
       return;
     }
     await refresh();
-    history.replace('/agent/dashboard');
+    history.replace('/Workspace/Home');
   };
 
   return (

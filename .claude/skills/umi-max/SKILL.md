@@ -16,6 +16,7 @@ description: 本仓库的 Umi Max 4 开发规范、逐文件职责与内容/体�
 3. 查阅 [开发流程与示例](references/development-guide.md) 中与当前任务有关的章节。
 4. 只完成当前需求；不因为此文档列出了推荐目录，就批量建立空目录或重构模板。
 5. 描述项目现状时以当前文件为准并说明差异；新增或整理代码遵守本文规范，不把旧结构当成新建示例，也不覆盖用户的新改动。
+6. 处理后台列表页时，同时调用并遵守 [list-pages](../list-pages/SKILL.md)；原型转写同时调用 [prototype-to-page](../prototype-to-page/SKILL.md)。
 
 解释项目结构时，先讲“配置 → 页面 → 组件 → service → 接口类型 → Mock → 状态/权限”的调用关系，再按用户关注的文件展开。
 
@@ -63,6 +64,7 @@ description: 本仓库的 Umi Max 4 开发规范、逐文件职责与内容/体�
 - `.umirc.ts` 是当前项目的编译期配置入口；`src/app.ts` 是运行时配置入口，二者不能混用。
 - 当前路由数组维护在 `config/router.ts`，由 `.umirc.ts` 的 `routes` 使用；不假设“放进 `pages` 就自动出现菜单”。
 - 路由 `component: './Home'` 对应 `src/pages/Home`；目录大小写必须一致，避免只在 Windows 正常。
+- 业务页面按原型菜单分组放在 `src/pages/<菜单分类>/<页面>/`，路由 path 与页面目录对应，不额外套 `agent`；变更路由时同步核对导航、登录跳转和 model 命名空间。
 - `name` 是菜单/页面名称，`access` 对应 `src/access.ts` 返回的权限键，`redirect` 是路由重定向。
 - 带参数路由必须和 service 的必需 ID 校验一致；不要让空值拼接出 `/undefined`。
 - 内部跳转使用 Umi 导出的 `Link`、`history` 等路由能力；不要使用空 `href` 作为操作按钮。
@@ -80,7 +82,7 @@ description: 本仓库的 Umi Max 4 开发规范、逐文件职责与内容/体�
 - 组件实例 Hook 用明确参数接收记录 ID 等输入；不要将自动注册的 model 默认 Hook 又直接调用一遍，造成共享实例与局部实例重复执行；页面私有实例 Hook 避免命名为会被扫描的 `model.ts`。
 - 同一份列表数据及 loading 只确定一个所有者：简单列表可由 ProTable request 管理；复杂流程由 model 编排时不再复制一套互相同步的列表状态。
 - 复用组件用明确 Props，异步提交写明返回类型；表格使用稳定业务主键，不以数组下标代替业务 ID。
-- `@@initialState` 存放启动初始化信息，不再创建相互竞争的当前用户副本；model 不放 JSX、表格 render 列、Modal 确认框、页面跳转或重复错误提示，UI 行为由消费方处理。
+- `@@initialState` 存放启动初始化信息，不再创建相互竞争的当前用户副本；model 不放 JSX、表格 render 列、Modal 确认框或页面跳转。导出等业务操作的 try/catch、空数据/上限判断、成功与失败消息统一由页面 model 处理，页面直接绑定动作，不重复提示。使用 `message.useMessage()` 时由 model 返回 contextHolder，页面负责挂载以保留主题上下文；确认框、导航等视图交互仍由消费方处理。
 - model/实例 Hook 的体量评估线为 200 行；按真实业务职责拆分，不为简单逻辑创建空 model，也不为压缩页面行数把整页机械搬进 Hook。
 - model 决策表、命名空间、生命周期和示例见 [开发流程与示例](references/development-guide.md) 第 7 节。
 
@@ -106,9 +108,10 @@ components/
 ### 4.3 请求、表格与表单
 
 - 后台业务列表默认使用 `ProTable`；先参考同类页面（例如企业客户管理）的列定义、搜索、筛选、分页、工具栏和刷新，不因 Mock 数据或列表简单而改用普通 `Table`。仅在用户明确指定或有经核实且需说明的组件能力限制时例外。
+- 表格列表遵守 [list-pages](../list-pages/SKILL.md)：默认不增加顶部状态 Tab、仅包裹表格的 card 和页面错误 Alert；状态筛选放在 ProTable 的“状态”字段中，已确认枚举使用下拉，状态 Tag 复用现有组件。具体页面的明确要求优先，非表格页面不套用。
 - 列表有导出需求时先检查同类页面和现有导出工具；默认与企业客户管理保持一致，复用 `src/utils/exportExcel.ts` 导出 `.xlsx`，使用当前已提交的筛选条件导出全部匹配记录而非仅当前页，并处理导出中、防重复及失败反馈。用户或协议明确指定其他格式时遵循其要求，不自行改成 CSV。
 - 状态等固定业务取值先依据现有协议或原型定义具名枚举，集中放所属模块的 `constants.ts`；筛选项从枚举派生，不在多处重复散写字符串。正式后端协议尚未确定时明确这是本地约定，接入时核对并映射，不能把原型枚举当成正式协议。
-- service 使用 `request`，GET 查询放 `params`，JSON 请求体放 `data`；以接口协议为准。
+- 业务接口请求函数必须通过 `config/service.ts` 白名单和 `pnpm openapi:service` 自动生成；缺接口时先核对 OpenAPI 再补配置，不手写页面 `service.ts` 或另建 HTTP 请求封装。生成 service 使用 `request`，GET 查询放 `params`，JSON 请求体放 `data`；以接口协议为准。
 - 区分 HTTP/网络失败与业务失败。HTTP 200 不代表业务成功；若响应使用 `success`，必须按真实协议判断。
 - 不同时在全局拦截器、service、页面三层重复弹出同一错误提示。
 - ProTable 的服务端分页需要返回 `{ data, success, total }`；`total` 是后端总数，不是当前页数组长度。
@@ -135,7 +138,7 @@ components/
 - Less 使用 `import styles from './index.less'`；尽量避免覆盖整个站点的 `.ant-*` 样式。
 - 日期、金额、枚举、空值展示使用明确的业务格式；不要用 `value || '-'` 把合法的 `0` 误当空值。
 - 优先采用当前版本支持的 Ant Design/Pro Components API；模板旧用法不等于推荐用法。
-- 只在非显而易见的约束处补一句原因注释，不新增解释每行代码的大段注释。
+- 新增或修改的手写业务代码中，每个方法和变量声明都需要简短中文注释，说明用途或业务含义；解构声明可统一说明一组值，循环变量说明迭代对象。不逐行解释实现，不写大段重复注释；生成文件的注释由生成器维护，不手改。
 
 ### 4.6 单文件内容与体量限制
 
@@ -188,7 +191,7 @@ allowBuilds:
 1. 先确认真实协议：路径、方法、参数、响应、分页、错误码和身份凭证。
 2. 检查目标文件是否带自动生成标记；`pnpm openapi:service`（别名 `pnpm openapi`）通过 `scripts/openapi.ts` 读取 `config/service.ts` 的多后端数组，按路径白名单生成 `src/services/<name>/`，各服务使用独立 namespace 和默认请求 baseURL。demo 与旧 backend 的生成来源不要与当前流程混为一谈。
 3. 区分 `serverPath`（请求地址）、`schemaPath`（协议来源）、`pathPrefix`（筛选路径前缀及文件分组起点）；生成文件名取此前缀后的第一级路径，如 `auth/login`、`auth/logout` 同在 `auth.ts`，与 Swagger tags 无关。空 `apis` 跳过该服务，成功生成会替换该服务目录；具体配置和失败保护见 README。
-4. 不编造生成命令，不直接覆写标记为自动生成的协议；需要时使用独立手写 service 或在其外适配。
+4. 不编造生成命令，不直接覆写标记为自动生成的协议。业务接口缺失时补全白名单后运行生成命令，再替换调用并清理旧封装；不得以独立手写 service 代替生成。纯字段适配放 model 或类型/纯工具模块。
 5. 更新类型、调用方和对应 Mock，避免实现与模拟接口不一致。
 6. 对必需 ID、分页映射、业务失败和取消操作进行验证。
 

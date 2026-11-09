@@ -30,6 +30,27 @@ declare namespace YiyanchaAPI {
     pendingAmount?: number;
   };
 
+  type AdminRechargeCreateRequest = {
+    /** 客户端为本次登记生成的UUID；重试沿用该值，重复提交返回409 */
+    requestId: string;
+    /** 所属企业编号 */
+    companyId: string;
+    /** 充值金额（元），必须大于0 */
+    amount: number;
+    /** 付款方式，如对公转账 */
+    paymentMethod: string;
+    /** 银行流水号或付款凭证号 */
+    paymentReference: string;
+    /** 实际付款日期 */
+    paymentDate: string;
+    /** 登记状态：pending 待审核（默认）或 rejected 已驳回；确认到账必须走审核接口 */
+    status?: string;
+    /** 备注 */
+    remark?: string;
+    /** 付款凭证文本或凭证编号；可选，服务端加密保存 */
+    proof?: string;
+  };
+
   type adminRechargesParams = {
     /** 页码，从1开始 */
     page?: string;
@@ -85,6 +106,23 @@ declare namespace YiyanchaAPI {
     orderId?: string;
     /** 结算参考号模糊筛选 */
     reference?: string;
+  };
+
+  type AdminRechargeUpdateRequest = {
+    /** 充值金额（元），必须大于0 */
+    amount: number;
+    /** 付款方式 */
+    paymentMethod: string;
+    /** 银行流水号或付款凭证号 */
+    paymentReference: string;
+    /** 实际付款日期 */
+    paymentDate: string;
+    /** 登记状态：pending 待审核或 rejected 已驳回；确认到账必须走审核接口 */
+    status: string;
+    /** 备注 */
+    remark?: string;
+    /** 付款凭证；留空表示保留原凭证，填写则服务端加密替换 */
+    proof?: string;
   };
 
   type adminSettlementsParams = {
@@ -363,6 +401,16 @@ declare namespace YiyanchaAPI {
     message?: string;
   };
 
+  type ApiResponseCompanyPermissionDetail = {
+    /** 响应状态码；成功为 200，失败为原 HTTP 状态码 */
+    code?: number;
+    /** 请求是否处理成功 */
+    success?: boolean;
+    data?: CompanyPermissionDetail;
+    /** 响应提示信息 */
+    message?: string;
+  };
+
   type ApiResponseCompanyPermissionPage = {
     /** 响应状态码；成功为 200，失败为原 HTTP 状态码 */
     code?: number;
@@ -553,6 +601,17 @@ declare namespace YiyanchaAPI {
     /** 请求是否处理成功 */
     success?: boolean;
     data?: ListPagePrice;
+    /** 响应提示信息 */
+    message?: string;
+  };
+
+  type ApiResponseListRechargeLogView = {
+    /** 响应状态码；成功为 200，失败为原 HTTP 状态码 */
+    code?: number;
+    /** 请求是否处理成功 */
+    success?: boolean;
+    /** 响应业务数据；无数据时为 null */
+    data?: RechargeLogView[];
     /** 响应提示信息 */
     message?: string;
   };
@@ -900,6 +959,16 @@ declare namespace YiyanchaAPI {
     message?: string;
   };
 
+  type ApiResponseTicket = {
+    /** 响应状态码；成功为 200，失败为原 HTTP 状态码 */
+    code?: number;
+    /** 请求是否处理成功 */
+    success?: boolean;
+    data?: Ticket;
+    /** 响应提示信息 */
+    message?: string;
+  };
+
   type ApiResponseTicketPage = {
     /** 响应状态码；成功为 200，失败为原 HTTP 状态码 */
     code?: number;
@@ -1056,6 +1125,7 @@ declare namespace YiyanchaAPI {
     displayPrice?: number;
     usageScene?: string;
     failureRule?: string;
+    /** 组合状态：active 已上架、disabled 已停用；新建时省略默认为 active，更新时省略保留原值 */
     status?: string;
     /** 组合内产品编号；至少一项且不能重复 */
     productIds: string[];
@@ -1076,6 +1146,14 @@ declare namespace YiyanchaAPI {
     createdAt?: string;
     /** 提交时间 */
     submittedAt?: string;
+    /** 所属企业名称 */
+    companyName?: string;
+    /** 认证附件清单，仅包含附件 ID 和文件名；附件内容需单独下载 */
+    documents?: CertificationDocumentInfo[];
+    /** 人工审核说明 */
+    reviewNote?: string;
+    /** 最近审核操作人 */
+    reviewerName?: string;
     /** 申请主体类型 */
     subjectType?: string;
     /** 企业主体 ID */
@@ -1086,6 +1164,13 @@ declare namespace YiyanchaAPI {
     status?: string;
     /** 审核完成时间 */
     reviewedAt?: string;
+  };
+
+  type CertificationDocumentInfo = {
+    /** 认证附件记录 ID */
+    id?: string;
+    /** 附件原始文件名 */
+    fileName?: string;
   };
 
   type CertificationFile = {
@@ -1187,6 +1272,41 @@ declare namespace YiyanchaAPI {
     scopeTotal?: number;
   };
 
+  type CompanyPermissionDetail = {
+    /** 权限记录编号 */
+    id?: string;
+    /** 企业编号 */
+    companyId?: string;
+    /** 企业名称 */
+    companyName?: string;
+    /** 产品编号 */
+    productId?: string;
+    /** 产品编码 */
+    productCode?: string;
+    /** 产品名称 */
+    productName?: string;
+    /** 每日核验次数上限；空表示不限制 */
+    dailyLimit?: number;
+    /** 是否允许查看报告 */
+    canViewReport?: boolean;
+    /** 是否允许下载报告 */
+    canDownloadReport?: boolean;
+    /** 权限状态：active 或 disabled */
+    status?: string;
+    /** 所属企业是否为示例数据 */
+    isDemo?: boolean;
+    /** 适用场景说明；可为空 */
+    usageScene?: string;
+    /** 创建时间；历史数据可能为空 */
+    createdAt?: string;
+    /** 备注 */
+    remark?: string;
+    /** 更新时间 */
+    updatedAt?: string;
+    /** 最近20条操作日志 */
+    operationLogs?: PermissionOperationLog[];
+  };
+
   type CompanyPermissionItem = {
     /** 权限记录编号 */
     id?: string;
@@ -1227,6 +1347,25 @@ declare namespace YiyanchaAPI {
     total?: number;
     /** 当前门户范围内企业产品权限记录数；不受过滤条件和分页影响 */
     scopeTotal?: number;
+  };
+
+  type CompanyPermissionRequest = {
+    /** 企业编号 */
+    companyId: string;
+    /** 产品编号 */
+    productId: string;
+    /** 每日核验次数上限，范围1至1,000,000 */
+    dailyLimit: number;
+    /** 是否允许查看报告 */
+    canViewReport: boolean;
+    /** 是否允许下载报告 */
+    canDownloadReport: boolean;
+    /** 适用场景 */
+    usageScene: string;
+    /** 状态：active 或 disabled */
+    status: string;
+    /** 备注 */
+    remark?: string;
   };
 
   type CompanyPriceDraft = {
@@ -1667,8 +1806,10 @@ declare namespace YiyanchaAPI {
     phone?: string;
     industry?: string;
     agentName?: string;
-    /** 认证状态：not_submitted 待认证、pending 审核中、approved 已认证、rejected 已驳回；不传表示全部 */
+    /** 录入认证状态：not_submitted、pending、approved、rejected；兼容原企业状态筛选 */
     certificationStatus?: string;
+    /** 独立实名状态：not_submitted 未提交、draft 草稿、pending 待审核、approved 已通过、rejected 已驳回；不传表示全部 */
+    identityStatus?: string;
     /** 是否包含示例记录，true 包含，false 隐藏示例；默认 true */
     includeDemo?: boolean;
     /** 页码，从1开始 */
@@ -1690,6 +1831,37 @@ declare namespace YiyanchaAPI {
     page?: number;
     /** 每页记录数，1至100 */
     pageSize?: number;
+  };
+
+  type listOrders1Params = {
+    /** 页码，从1开始 */
+    page?: number;
+    /** 每页记录数，1至100 */
+    size?: number;
+    batchNo?: string;
+    companyId?: string;
+    productId?: string;
+    companyName?: string;
+    /** 订单状态：pending、paid、completed 或 cancelled */
+    status?: string;
+    /** 授权状态：pending、active 或 revoked */
+    authorizationStatus?: string;
+    /** 是否包含示例订单，默认 true；按订单ID或批次号前缀识别 */
+    includeDemo?: boolean;
+    orderId?: string;
+    productName?: string;
+    minQuantity?: number;
+    maxQuantity?: number;
+    minPaid?: number;
+    maxPaid?: number;
+    createdFrom?: string;
+    createdTo?: string;
+    agentName?: string;
+    subjectName?: string;
+    purpose?: string;
+    validFrom?: string;
+    validTo?: string;
+    isDemo?: boolean;
   };
 
   type ListPageAgentPolicy = {
@@ -1803,6 +1975,7 @@ declare namespace YiyanchaAPI {
     companyId?: string;
     productId?: string;
     title?: string;
+    /** 报告执行状态，可选值：success（执行成功）、failed（执行失败） */
     status?: string;
     verifiedFrom?: string;
     verifiedTo?: string;
@@ -2071,6 +2244,21 @@ declare namespace YiyanchaAPI {
     level?: number;
     /** 企业认证展示状态：pending、approved、rejected 或 not_submitted，由 certification 记录推导，存在任意待审认证时显示 pending；否则按 reviewed_at 最新、再按 id 倒序取最近已审核记录，approved 显示已认证，rejected 显示已驳回；无记录显示 not_submitted。 */
     certificationStatus?: string;
+    /** 企业实名状态：draft、pending、approved、rejected 或 not_submitted；忽略中台建档时写入的初始化状态，仅按真实实名记录中待审优先、再按提交/创建时间和编号倒序选择 */
+    identityStatus?: string;
+    /** 当前选中的企业实名认证记录编号；无实名记录时为空 */
+    identityCertificationId?: string;
+    /** 当前选中的企业实名认证记录所含材料数；无实名记录时为0 */
+    identityDocumentCount?: number;
+  };
+
+  type OrganizationAccountUpdate = {
+    /** 要更新的 BUSINESS 账号编号；通过企业账号列表选择，必填 */
+    userId: string;
+    /** 新登录名；不传或空白保留原值 */
+    loginName?: string;
+    /** 新密码；不传或空白保留原密码，填写时须为12至128位且同时含字母和数字 */
+    password?: string;
   };
 
   type OrganizationStatusRequest = {
@@ -2079,6 +2267,7 @@ declare namespace YiyanchaAPI {
   };
 
   type OrganizationUpdateRequest = {
+    account?: OrganizationAccountUpdate;
     /** 名称；不传保留，非空时更新 */
     name?: string;
     /** 联系人姓名；空字符串清空 */
@@ -2099,6 +2288,63 @@ declare namespace YiyanchaAPI {
     address?: string;
     /** 备注；空字符串清空 */
     notes?: string;
+  };
+
+  type ownSettlementsParams = {
+    /** 页码，从1开始 */
+    page?: string;
+    /** 每页条数，最大100 */
+    pageSize?: string;
+    /** 可选状态筛选；省略时查询当前数据范围内全部状态 */
+    status?: string;
+    /** 企业编号筛选；仅 ADMIN 财务列表使用 */
+    companyId?: string;
+    /** 代理编号筛选；仅 ADMIN 财务列表使用 */
+    agentId?: string;
+    /** 资金方向筛选；账户流水仅支持 IN、OUT、PENDING、FREEZE、UNFREEZE */
+    direction?: string;
+    /** 提现收款账户完整值精确筛选；服务端转换为HMAC盲索引 */
+    bankAccount?: string;
+    /** 是否包含示例记录 */
+    includeDemo?: string;
+    /** 可选关键字；根据接口用途匹配名称或编号 */
+    keyword?: string;
+    /** 企业名称模糊筛选 */
+    companyName?: string;
+    /** 代理名称模糊筛选 */
+    agentName?: string;
+    /** 充值金额下限 */
+    amountMin?: string;
+    /** 充值金额上限 */
+    amountMax?: string;
+    /** 支付方式精确筛选 */
+    paymentMethod?: string;
+    /** 支付凭证编号模糊筛选 */
+    paymentReference?: string;
+    /** 充值日期起 */
+    paymentDateFrom?: string;
+    /** 充值日期止 */
+    paymentDateTo?: string;
+    /** 发票类型精确筛选 */
+    invoiceType?: string;
+    /** 发票号码模糊筛选 */
+    invoiceNo?: string;
+    /** 付款参考号模糊筛选 */
+    payoutReference?: string;
+    /** 结算周期模糊筛选 */
+    periodLabel?: string;
+    /** 资金记录创建日期起 */
+    createdFrom?: string;
+    /** 资金记录创建日期止 */
+    createdTo?: string;
+    /** 结算周期开始日期精确筛选 */
+    periodStart?: string;
+    /** 结算周期结束日期精确筛选 */
+    periodEnd?: string;
+    /** 结算关联订单编号精确筛选 */
+    orderId?: string;
+    /** 结算参考号模糊筛选 */
+    reference?: string;
   };
 
   type PageAgentSettlementRequestView = {
@@ -2450,6 +2696,11 @@ declare namespace YiyanchaAPI {
     status?: string;
   };
 
+  type PermissionOperationLog = {
+    action?: string;
+    createdAt?: string;
+  };
+
   type PermissionRequest = {
     /** 每日核验次数上限；为空表示不设置上限 */
     dailyLimit?: number;
@@ -2641,6 +2892,21 @@ declare namespace YiyanchaAPI {
     proof: string;
   };
 
+  type RechargeLogView = {
+    /** 操作动作编码，如 finance.admin.recharge.create、finance.recharge.review.confirmed */
+    action?: string;
+    /** 审计详情JSON */
+    detail?: string;
+    /** 操作人编号 */
+    operatorId?: string;
+    /** 操作人显示名称 */
+    operatorName?: string;
+    /** 数据来源模块 */
+    source?: string;
+    /** 操作时间 */
+    createdAt?: string;
+  };
+
   type RechargeRequest = {
     /** 目标企业编号；AGENT 代直接客户提交时必填，BUSINESS 请求忽略 */
     companyId?: string;
@@ -2681,6 +2947,8 @@ declare namespace YiyanchaAPI {
     paymentReference?: string;
     /** 付款日期 */
     paymentDate?: string;
+    /** 备注 */
+    remark?: string;
     /** 申请时间 */
     createdAt?: string;
     /** 已鉴权后解密的付款凭证内容 */
@@ -2747,7 +3015,7 @@ declare namespace YiyanchaAPI {
     reportId?: string;
     /** 报告标题 */
     title?: string;
-    /** 报告状态 */
+    /** 报告执行状态：success=执行成功，failed=执行失败 */
     status?: string;
     /** 报告核验时间 */
     verifiedAt?: string;
@@ -2755,7 +3023,7 @@ declare namespace YiyanchaAPI {
     orderId?: string;
     /** 所属企业名称 */
     companyName?: string;
-    /** 授权对象姓名；从当前有效授权密文解出，不返回证件信息 */
+    /** 授权对象姓名；从授权证据密文解出，不返回证件信息；无证据时为空 */
     subjectName?: string;
     /** 产品名称 */
     productName?: string;
@@ -2963,6 +3231,29 @@ declare namespace YiyanchaAPI {
     createdAt?: string;
     /** 是否为示例数据 */
     isDemo?: boolean;
+    /** 关联核验订单 ID */
+    orderId?: string;
+    /** 关联订单批次号 */
+    orderNo?: string;
+    /** 工单问题描述，仅管理员详情返回 */
+    description?: string;
+    /** 工单处理记录，仅管理员详情返回 */
+    resolution?: string;
+    /** 最后更新时间 */
+    updatedAt?: string;
+    /** 工单审计时间线，仅管理员详情返回 */
+    operationLogs?: TicketOperationLog[];
+  };
+
+  type TicketOperationLog = {
+    /** 操作动作编码 */
+    action?: string;
+    /** 操作说明 */
+    detail?: string;
+    /** 操作人姓名 */
+    operatorName?: string;
+    /** 操作时间 */
+    createdAt?: string;
   };
 
   type TicketPage = {
@@ -2987,6 +3278,16 @@ declare namespace YiyanchaAPI {
     type?: string;
     /** 工单优先级 */
     priority?: string;
+    /** 所属企业 ID；管理员可选 */
+    companyId?: string;
+    /** 关联核验订单 ID；可选 */
+    orderId?: string;
+    /** 问题描述 */
+    description?: string;
+    /** 处理记录；仅管理员可填写 */
+    resolution?: string;
+    /** 管理员创建/编辑时可选状态 */
+    status?: string;
   };
 
   type TicketStatusRequest = {

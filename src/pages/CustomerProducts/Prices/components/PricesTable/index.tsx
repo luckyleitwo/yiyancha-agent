@@ -183,6 +183,7 @@ export default function PricesTable({
       toolBarRender={() => [
         <Button
           key="export"
+          type="primary"
           icon={<DownloadOutlined />}
           onClick={() => onAction('导出')}
         >

@@ -46,7 +46,7 @@ export default function Header({ onMenuClick, menuOpen }: Props) {
       )}
       <nav className={styles.breadcrumb} aria-label="面包屑">
         <LayoutIcon name="grid" />
-        <Link to="/agent/dashboard">工作空间</Link>
+        <Link to="/Workspace/Home">工作空间</Link>
         <span>/</span>
         <strong aria-current="page">{pageName}</strong>
       </nav>

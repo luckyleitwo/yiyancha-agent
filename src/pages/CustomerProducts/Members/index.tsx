@@ -132,6 +132,7 @@ export default function Members() {
           toolBarRender={() => [
             <Button
               key="export"
+              type="primary"
               icon={<DownloadOutlined />}
               onClick={placeholder}
             >

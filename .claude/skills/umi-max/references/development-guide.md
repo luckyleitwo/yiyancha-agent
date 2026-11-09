@@ -114,11 +114,11 @@ components/
 当前 `src/services/demo/` 有 OneAPI 自动生成标记：
 
 - 优先更新明确存在的接口生成源和生成流程。
-- 当前 `pnpm openapi:service` 通过 `tsx scripts/openapi.ts` 运行，`pnpm openapi` 是别名。它读取 `config/service.ts` 的多后端数组，使用 `@umijs/openapi` 按路径白名单生成 `src/services/<name>/` 和独立 namespace；当前启用服务为 `yiyancha`，生成 login、logout 两个请求函数，旧 `backend` 目录保留但不随此配置更新。
+- 当前 `pnpm openapi:service` 通过 `tsx scripts/openapi.ts` 运行，`pnpm openapi` 是别名。它读取 `config/service.ts` 的多后端数组，使用 `@umijs/openapi` 按路径白名单生成 `src/services/<name>/` 和独立 namespace；当前启用服务为 `yiyancha`，具体接口以 `config/service.ts` 的当前白名单为准；旧 `backend` 目录保留但不随此配置更新。
 - `serverPath` 是生成请求的默认 `baseURL`，`schemaPath` 是 Swagger / OpenAPI JSON 来源，`pathPrefix` 补全接口选择路径并作为生成文件的分组起点，不重复添加到请求路径。文件名按此前缀后的第一级路径（如 `auth/login`、`auth/logout` → `auth.ts`）而非 Swagger tags 生成；函数名仍按 `operationId`。字符串选择单方法路径，多方法路径用 `{ path, method }` 指定；空 `apis` 不读取文档、不清空旧输出。
 - 文档读取或筛选失败不更新任何服务；先暂存所有生成结果，再逐个替换对应目录，单目录替换失败尝试恢复，不保证跨服务事务。成功后会移除该目录上次未再选择的函数，不能在生成目录中保留手写适配。
 - `OPENAPI_SCHEMA_PATH` 只允许在恰好一个服务启用时覆盖文档来源。当前不使用 `.umirc.ts` 的 `openAPI` 配置；具体配置和测试命令见 README，不因普通页面或文档任务擅自访问内网或重新生成。
-- 新手写业务接口可以放在独立业务目录，用 `types.ts` 显式导出类型。
+- 新增业务接口必须先核对 OpenAPI，在 `config/service.ts` 保留既有白名单并追加所需方法，再执行 `pnpm openapi:service`；不得新建手写 HTTP service。既有手写业务封装按当前任务范围迁移到生成接口，字段适配留在 model。
 - 对生成响应做业务适配时，放在外层手写模块，不给生成文件增加 UI 副作用。
 
 ### 4.2 请求分层
@@ -130,7 +130,7 @@ components/
   → service 用 request 描述 HTTP 协议
   → 后端处理身份、权限、业务规则
   → service 返回真实协议结果，model / Hook 完成业务结果处理
-  → 页面或约定的统一错误层给用户反馈
+  → 页面 model 处理业务操作结果消息，或由既定统一错误层反馈；同一错误只提示一次
 ```
 
 - GET 的关键词、页码等放 `params`。
@@ -286,6 +286,7 @@ src/app.ts:getInitialState
 
 - 通过 React Hook 管理本业务状态、loading/error、筛选条件、选中记录和流程状态。
 - 调用 service 完成请求编排、字段转换、保存/删除等业务动作，处理业务结果并提供明确返回值。
+- 页面 model 统一处理导出等业务操作的 try/catch、空数据/导出上限判断和结果消息；页面直接绑定动作，不再重复编排提示。使用 `message.useMessage()` 时由 model 返回 contextHolder，页面只负责挂载；不要在共享 model 挂载时自动弹消息。
 - 提供 UI 所需的派生值、动作和必要数据；简单派生值直接计算，昂贵计算确有必要时才缓存。
 - 提供 `load`、`save`、`remove`、`reset` 等有业务语义的动作；复杂状态变更优先封装动作而不是向所有消费者暴露内部结构。
 
@@ -294,7 +295,7 @@ src/app.ts:getInitialState
 - JSX、表格列的 render、Modal 确认框、页面跳转、依赖 DOM 的视图引用，以及导入页面/组件制造反向依赖。
 - 直接拼写 HTTP 请求协议绕过 service；把全站无关业务塞进一个页面 model。
 - 同时维护互相同步的多份列表、表单或当前用户状态；只为复制派生值而增加 useEffect。
-- 在 model 与页面分别弹同一条错误提示；默认由 UI/既定统一错误层负责提示。
+- 在 model、页面、service 或全局错误层重复提示同一次失败；model 接管业务操作提示时应与请求错误处理约定配套，页面不再补一套 catch 和结果提示。
 - 无条件执行所有页面请求、多个 useModel 消费者各自重复初始化或在卸载时互相 reset。
 
 页面保留渲染、列配置、确认交互与视图引用；model 处理复杂数据流程；service 处理 HTTP 协议；这是职责分离，不要求通过逐层转发制造没有价值的空函数。

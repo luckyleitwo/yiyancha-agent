@@ -127,13 +127,13 @@ export async function pendingWithdrawals(
   );
 }
 
-/** 分页查询可见报告 **作用：**按企业、代理客户树或中台范围查找尚在授权有效期内且企业产品权限允许查看的报告。
+/** 分页查询可见报告 **作用：**按企业、代理客户树或中台范围分页查询成功/失败报告。
 
 **调用时机：**报告中心打开或翻页时。
 
-**调用方式：**GET `/api/v1/{business|agents|admin}/reports?page=1&size=20&reportId=&companyId=&companyName=&productId=&productName=&title=&subjectName=&status=&conclusion=&source=&createdFrom=2026-01-01T00:00:00&createdTo=2026-12-31T23:59:59&verifiedFrom=&verifiedTo=&includeDemo=true`。标题和文本包含匹配，被核验人姓名完整值盲索引精确匹配，状态/编号精确匹配，日期为闭区间。普通企业/代理列表详情不展示draft报告，ADMIN可查。
+**调用方式：**GET `/api/v1/{business|agents|admin}/reports?page=1&size=20&reportId=&companyId=&companyName=&productId=&productName=&title=&subjectName=&status=success|failed&conclusion=&source=&createdFrom=2026-01-01T00:00:00&createdTo=2026-12-31T23:59:59&verifiedFrom=&verifiedTo=&includeDemo=true`。状态仅接受success（执行成功）或failed（执行失败）；标题和文本包含匹配，被核验人姓名完整值盲索引精确匹配，编号精确匹配，日期为闭区间。其他历史状态不进入列表。
 
-**限制：**需要 report:read；校验 company_product_permission.can_view_report、订单归属和授权/报告有效期；列表不返回加密明细解密值。 GET /api/v1/admin/reports */
+**限制：**需要 report:read；BUSINESS/AGENT 校验产品权限、订单归属及授权/报告有效期，ADMIN可查全部success/failed报告；列表不返回加密明细解密值。 GET /api/v1/admin/reports */
 export async function listReports2(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: YiyanchaAPI.listReports2Params,

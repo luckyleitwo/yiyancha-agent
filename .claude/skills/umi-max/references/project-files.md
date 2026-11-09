@@ -620,12 +620,12 @@ pnpm dev
 | `src/components/Guide/Guide.tsx` | 基于 name Props 的欢迎展示、组件私有交互 | 读取特定页面/model、发业务请求、修改路由、依赖 Table 或 Home 的内部文件 | 200 行评估；仍保持纯展示职责，不为扩功能扩成通用后台壳 |
 | `src/components/Guide/Guide.less` | Guide 局部样式 | 页面布局、全站主题重置、其他组件样式、无边界全局覆盖 | 200 行评估；跟随真实子组件拆 |
 | `src/components/Guide/index.ts` | Guide 的默认/必要类型导出 | JSX、状态、request、初始化副作用、内部实现堆积 | 纯出口参考 30 行，默认只做公开导出 |
-| `src/services/demo/UserController.ts` | 通过真实生成流程输出的方法、路径、参数、返回类型 | 手写页面逻辑、message、model、路由、副作用适配；正常开发直接手改生成结果 | 协议生成，不套 200 行线；适配放独立手写 service，生成规则从源调整 |
+| `src/services/demo/UserController.ts` | 通过真实生成流程输出的方法、路径、参数、返回类型 | 手写页面逻辑、message、model、路由、副作用适配；正常开发直接手改生成结果 | 协议生成，不套 200 行线；纯字段适配放 model/纯工具，接口变更从生成源调整 |
 | `src/services/demo/index.ts` | 生成器输出的 Controller 聚合导出 | 页面状态、请求编排、缓存、提示、副作用；手写改动等待下次覆盖 | 生成出口不按手写 30 行线强拆 |
 | `src/services/demo/typings.d.ts` | 生成协议对应的 namespace、DTO、响应与枚举类型 | 函数实现、JSX、页面 Props、运行时校验逻辑；修改类型伪装后端支持字段 | 生成类型不套 150 行线，不手拆破坏生成器输出 |
 | `mock/userAPI.ts` | 与 service 同协议的路由响应、明确的开发数据和必要内存变更 | 真实敏感数据、生产凭证、调用生产服务、无协议依据假成功、前端页面逻辑 | 路由处理逻辑参考 200 行；按业务域拆，静态测试数据不机械按行切分 |
 
-对于新建的手写 `src/services/<domain>/*.ts`：允许描述 HTTP 协议、输入/输出类型和协议需要的轻量转换；禁止导入 `antd`、页面、model 和弹 UI 提示，参考 200 行，按业务域/Controller 拆。适配生成代码的手写文件必须放在不会被生成器覆盖的位置，先核对实际输出目录，不能仅凭文件名猜测安全。
+业务接口必须通过 `config/service.ts` 白名单及 `pnpm openapi:service` 自动生成，不新增页面 `service.ts` 或手写 HTTP 业务封装。已有请求基础设施仍可在其原文件维护，不得混入页面、model 或消息提示；纯字段转换放 model/纯工具。迁移旧手写封装时先确认生成方法及参数类型，再替换调用并清理旧文件，不直接修改生成输出。
 
 对于新建的手写 `types.ts`：允许局部业务 DTO 和共享类型导出，禁止运行时实现，参考 150 行；不在“全局类型”中重复声明已生成的同名 API 类型。
 
@@ -683,7 +683,7 @@ constants → 静态值 / 类型
 
 | 文件/模式 | 允许内容 | 禁止内容 | 注册与体量边界 |
 | --- | --- | --- | --- |
-| `src/pages/<Page>/model.ts` | 页面复杂关联状态、service 请求编排、业务动作、DTO 映射、派生值、明确 reset | JSX、表格 render 列、Modal/UI 提示、页面/组件导入、复制全局当前用户、无条件挂载请求 | 自动发现，默认 `<Page>.model`；共享而非路由隔离，参考 200 行 |
+| `src/pages/<Page>/model.ts` | 页面复杂关联状态、service 请求编排、业务动作及结果消息、DTO 映射、派生值、明确 reset；可返回消息 contextHolder 供页面挂载 | JSX、表格 render 列、Modal 确认框、页面跳转、重复消息提示、页面/组件导入、复制全局当前用户、无条件挂载请求 | 自动发现，默认 `<Page>.model`；共享而非路由隔离，参考 200 行 |
 | `src/pages/<Page>/models/<domain>.ts` | 页面中独立业务域的状态与动作 | 按函数数量机械切分、模型互相循环依赖、在此放常量/测试伪装成 model | 自动发现，默认 `<Page>.<domain>`；辅助/类型文件尽量移出扫描目录，参考 200 行 |
 | `src/models/<domain>.ts` | 多页面确实共享的业务状态、动作及 service 编排 | 单个组件实例的输入草稿、所有页面的弹窗状态、重复初始化用户、UI 依赖 | 自动发现，默认 `<domain>`；不能变成全站状态杂物仓库，参考 200 行 |
 | `src/components/<Component>/model.ts` | 未注册时导出本地实例 Hook，管理组件独立状态与数据逻辑；明确注册后才作为共享 model | 假定放在组件旁就会自动注册；既注册又直接调用导致双实例；用共享状态承载本应独立的草稿 | 默认不扫描；未注册时组件直接导入 Hook，共享时核对注册结果；参考 200 行 |

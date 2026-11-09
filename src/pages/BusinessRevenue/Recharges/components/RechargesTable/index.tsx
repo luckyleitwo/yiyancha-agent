@@ -184,6 +184,7 @@ export default function RechargesTable({
       toolBarRender={() => [
         <Button
           key="export"
+          type="primary"
           icon={<DownloadOutlined />}
           onClick={() => onAction('导出')}
         >

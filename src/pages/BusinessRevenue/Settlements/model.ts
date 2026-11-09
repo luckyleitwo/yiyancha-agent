@@ -1,26 +1,52 @@
+import { ownSettlements } from '@/services/yiyancha/finance';
 import { useCallback, useRef, useState } from 'react';
-import { listAgentSettlements } from './service';
-import type { SettlementQuery } from './types';
+import { PAGE_SIZE } from './constants';
+import type { SettlementQuery, SettlementSearchValues } from './types';
 
-// 列表由 ProTable 持有，model 管理请求生命周期和错误。
+/** 管理收益明细的查询参数、请求生命周期和列表错误。 */
 export default function useSettlementsModel() {
+  // 留给页面展示的网络或响应格式错误。
   const [error, setError] = useState('');
+  // 当前有效的列表请求，用于取消和识别过期响应。
   const currentRequest = useRef<AbortController>();
-  const requestSettlements = useCallback(async (query: SettlementQuery) => {
-    // 筛选变化时取消旧请求，防止旧响应覆盖当前结果。
+
+  /** 转换表格条件，通过生成接口查询本人及下属代理结算记录。 */
+  const requestSettlements = useCallback(async (p: SettlementSearchValues) => {
+    // 仅发送页面支持的筛选字段；分页及金额按生成协议转成字符串。
+    const query: SettlementQuery = {
+      keyword: p.keyword?.trim() || undefined,
+      agentId: p.agentId?.trim() || undefined,
+      agentName: p.agentName?.trim() || undefined,
+      amountMin: p.amountMin?.toString(),
+      amountMax: p.amountMax?.toString(),
+      periodLabel: p.periodLabel?.trim() || undefined,
+      periodStart: p.periodStart || undefined,
+      periodEnd: p.periodEnd || undefined,
+      reference: p.reference?.trim() || undefined,
+      orderId: p.orderId?.trim() || undefined,
+      createdFrom: p.createdFrom || undefined,
+      createdTo: p.createdTo || undefined,
+      status: p.status || undefined,
+      includeDemo: p.includeDemo,
+      page: String(p.current ?? 1),
+      pageSize: String(p.pageSize ?? PAGE_SIZE),
+    };
     currentRequest.current?.abort();
+    // 此次请求的取消控制器，不与其他查询共享。
     const controller = new AbortController();
     currentRequest.current = controller;
     setError('');
     try {
-      const response = await listAgentSettlements(query, {
+      // 生成接口返回的原始业务响应。
+      const response = await ownSettlements(query, {
         signal: controller.signal,
         skipErrorHandler: true,
       });
       if (controller.signal.aborted || currentRequest.current !== controller)
         return { data: [], total: 0, success: false };
-      // 明确的业务失败由全局响应拦截器提示。
+      // 明确的业务失败已由全局响应拦截器提示，不重复弹消息。
       if (!response.success) return { data: [], total: 0, success: false };
+      // 当前页记录与筛选后的总条数，用于 ProTable 分页。
       const { items, total } = response.data ?? {};
       if (
         !Array.isArray(items) ||
@@ -42,6 +68,8 @@ export default function useSettlementsModel() {
         currentRequest.current = undefined;
     }
   }, []);
+
+  /** 离开页面时取消请求并清理共享 model 状态。 */
   const reset = useCallback(() => {
     currentRequest.current?.abort();
     currentRequest.current = undefined;

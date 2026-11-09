@@ -19,6 +19,7 @@ export type ServiceConfig = {
   apis: ApiSelection[];
 };
 
+// 各后端的请求地址、协议来源和保留生成的接口白名单。
 const services: ServiceConfig[] = [
   {
     name: 'yiyancha',
@@ -32,7 +33,39 @@ const services: ServiceConfig[] = [
     schemaPath: 'http://192.168.1.219:8080/v3/api-docs',
     pathPrefix: '/api/v1',
     namespace: 'YiyanchaAPI',
-    apis: [],
+    // 保留现有接口并补充当前页面所需接口；生成器会替换整个服务目录。
+    apis: [
+      { path: 'admin/authorizations', method: 'GET' },
+      { path: 'admin/finance/invoices', method: 'GET' },
+      { path: 'admin/finance/overview', method: 'GET' },
+      { path: 'admin/finance/recharges', method: 'GET' },
+      { path: 'admin/finance/settlements', method: 'GET' },
+      { path: 'admin/finance/withdrawals', method: 'GET' },
+      { path: 'admin/reports', method: 'GET' },
+      { path: 'auth/login', method: 'POST' },
+      { path: 'auth/logout', method: 'POST' },
+      { path: 'auth/me', method: 'GET' },
+      { path: 'catalog/admin/companies', method: 'POST' },
+      { path: 'catalog/agent-policies', method: 'GET' },
+      { path: 'catalog/agents', method: 'GET' },
+      { path: 'catalog/bundles', method: 'GET' },
+      { path: 'catalog/companies', method: 'GET' },
+      { path: 'catalog/dashboard', method: 'GET' },
+      { path: 'catalog/openings', method: 'GET' },
+      { path: 'catalog/prices', method: 'GET' },
+      { path: 'catalog/products', method: 'GET' },
+      { path: 'governance/channels', method: 'GET' },
+      { path: 'governance/contracts', method: 'GET' },
+      { path: 'governance/suppliers', method: 'GET' },
+      { path: 'governance/templates', method: 'GET' },
+      { path: 'identity/audit-logs', method: 'GET' },
+      { path: 'identity/permissions', method: 'GET' },
+      { path: 'identity/roles', method: 'GET' },
+      { path: 'identity/users', method: 'GET' },
+      { path: 'system/health', method: 'GET' },
+      { path: 'agents/orders', method: 'GET' },
+      { path: 'finance/ownSettlements', method: 'GET' },
+    ],
   },
 ];
 

@@ -193,6 +193,7 @@ export default function BundlesTable({
       toolBarRender={() => [
         <Button
           key="export"
+          type="primary"
           icon={<DownloadOutlined />}
           onClick={() => onAction('导出')}
         >

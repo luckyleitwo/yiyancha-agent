@@ -151,6 +151,7 @@ export default function PoliciesTable({
       toolBarRender={() => [
         <Button
           key="export"
+          type="primary"
           icon={<DownloadOutlined />}
           onClick={() => onAction('导出')}
         >

@@ -113,9 +113,9 @@ export async function listBundles(
 
 /** 按门户数据范围查询企业 **作用：**分页查询企业目录，返回当前页记录、筛选后总数 `total`，以及不受筛选影响的当前门户可见企业总数 `scopeTotal`；企业条目含所属代理、创建人编号 `createdBy`/名称 `createdByName` 和示例标记 `isDemo`。
 
-**调用时机：**进入企业客户管理页或切换认证状态、关键字、示例数据范围、代理范围及页码时调用。
+**调用时机：**进入企业客户管理页或切换录入认证、实名状态、关键字、代理范围及页码时调用。
 
-**调用方式：**`GET /api/v1/catalog/companies?page=1&pageSize=20&keyword=<关键字>&certificationStatus=not_submitted&includeDemo=true&agentId=<中台可选过滤>&created_by=<中台可选过滤>&onlyMine=false`。关键字匹配企业名称、联系人、行业、地址、备注、所属代理名称/编号；手机号和统一社会信用代码只支持完整值精确匹配。`includeDemo=false` 隐藏示例企业。`created_by` 通过创建人用户编号精确筛选；`creatorId` 是兼容别名。`onlyMine=true` 由服务端按当前登录用户筛选创建记录。响应 `data.total` 是筛选后总数，`data.scopeTotal` 是当前门户权限范围内企业总数，不受任何筛选参数影响。
+**调用方式：**`GET /api/v1/catalog/companies?page=1&pageSize=20&keyword=<关键字>&certificationStatus=not_submitted&identityStatus=pending&includeDemo=true&agentId=<中台可选过滤>&created_by=<中台可选过滤>&onlyMine=false`。`identityStatus` 可选 `not_submitted`、`draft`、`pending`、`approved`、`rejected`，不传表示全部；摘要忽略中台建档初始化记录，待审记录优先，其余按提交时间（未提交时按创建时间）和编号倒序选择；`identityCertificationId` 和 `identityDocumentCount` 对应此记录，无记录时 ID 为空、状态为 `not_submitted`、材料数为0。关键字匹配企业名称、联系人、行业、地址、备注、所属代理名称/编号；手机号和统一社会信用代码只支持完整值精确匹配。`includeDemo=false` 隐藏示例企业。`created_by` 通过创建人用户编号精确筛选；`creatorId` 是兼容别名。`onlyMine=true` 由服务端按当前登录用户筛选创建记录。响应 `data.total` 是筛选后总数，`data.scopeTotal` 是当前门户权限范围内企业总数，不受任何筛选参数影响。
 
 **权限与范围：**ADMIN、AGENT 或 BUSINESS 门户且拥有 `catalog:organization:read`；`created_by`/`creatorId` 仅 ADMIN 可传，其他门户传入会被拒绝；各门户 `onlyMine` 均按当前会话用户 ID 筛选。ADMIN 的 `agentId` 过滤企业直接所属代理，AGENT 只能查询本人代理树下企业，BUSINESS 只能查询本企业。`scopeTotal` 分别统计 ADMIN 全部企业、AGENT 当前代理树企业、BUSINESS 当前企业。 GET /api/v1/catalog/companies */
 export async function listCompanies(

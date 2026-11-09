@@ -172,6 +172,7 @@ export default function Companies() {
           toolBarRender={() => [
             <Button
               key="export"
+              type="primary"
               icon={<DownloadOutlined />}
               onClick={placeholder}
             >

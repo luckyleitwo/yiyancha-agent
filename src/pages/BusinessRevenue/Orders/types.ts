@@ -1,21 +1,14 @@
-// 代理端订单列表筛选参数；分页使用接口要求的 size。
-export type OrderQuery = {
-  orderId?: string;
-  batchNo?: string;
-  companyId?: string;
-  companyName?: string;
-  subjectName?: string;
-  productId?: string;
-  productName?: string;
-  agentName?: string;
-  minQuantity?: number;
-  maxQuantity?: number;
-  minPaid?: number;
-  maxPaid?: number;
-  createdFrom?: string;
-  createdTo?: string;
-  authorizationStatus?: string;
-  includeDemo?: boolean;
-  page?: number;
-  size?: number;
+// 复用生成协议，仅保留本页使用的筛选项。
+export type OrderQuery = Omit<
+  YiyanchaAPI.listOrders1Params,
+  'status' | 'purpose' | 'validFrom' | 'validTo' | 'isDemo'
+>;
+
+export type OrderSearchValues = Omit<
+  OrderQuery,
+  'page' | 'size' | 'includeDemo'
+> & {
+  includeDemo?: string;
+  current?: number;
+  pageSize?: number;
 };

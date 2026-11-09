@@ -19,10 +19,10 @@
 - [ ] 销售定价 — 当前有效价格列表代码及构建完成（GET `/api/v1/catalog/prices`，待联调与视觉验收）；企业专属价格草稿列表是否同页展示待确认（GET `/api/v1/catalog/company-price-drafts`）。
 - [x] 组合产品（代码及构建完成，待真实接口联调和浏览器验收） — GET `/api/v1/catalog/bundles`（pageSize）
 - [ ] 客户查询记录 — GET `/api/v1/agents/orders`（size）：列表代码及构建完成；代理端响应结构、状态枚举、真实接口联调与浏览器验收待确认。
-- [ ] 客户充值记录 — GET `/api/v1/agents/recharges`（pageSize）
-- [ ] 下级代理 — GET `/api/v1/catalog/agents`（pageSize）
-- [ ] 分佣配置 — GET `/api/v1/catalog/agent-policies`（pageSize）
-- [ ] 收益明细 — GET `/api/v1/finance/settlements`（pageSize，代理树结算台账）
+- [ ] 客户充值记录 — GET `/api/v1/agents/recharges`（pageSize）：列表代码已实现，代理端响应结构、付款日期筛选格式与真实接口联调、浏览器验收待确认。
+- [ ] 下级代理 — GET `/api/v1/catalog/agents`（pageSize，固定 descendantsOnly=true）：列表代码完成；状态枚举、真实接口联调与浏览器验收待确认。
+- [ ] 分佣配置 — GET `/api/v1/catalog/agent-policies`（pageSize）：列表代码完成；真实接口联调与浏览器验收待完成。
+- [ ] 收益明细 — GET `/api/v1/finance/ownSettlements`（pageSize，本人及下属代理结算单）：接口路径和响应结构已核对 OpenAPI；日期参数、真实账号联调与浏览器验收待验证。
 - [ ] 结算与提现 — GET `/api/v1/finance/withdrawals`（pageSize）
 - [ ] 客户报告 — GET `/api/v1/agents/reports`（size）
 - [ ] 个人实名认证 — GET `/api/v1/governance/certifications`（size，subjectType=person）
@@ -41,3 +41,7 @@
 ## 目录与产品页面系分
 - [x] 已有代理页面路由组件调整到 `src/pages/agent/`，原登录页保留。
 - [ ] 产品开通、销售定价有效价格列表和组合产品已按要求实施；销售定价草稿范围待确认，详见 `页面系分-产品与定价.md`。
+
+- [x] 按原型菜单分组整理代理端页面目录：工作空间、客户与产品、业务与收益；保留原 URL。
+
+- [x] 页面分类已调整到 `src/pages/`，旧 `src/pages/agent/` 已清理。

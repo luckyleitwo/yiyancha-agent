@@ -14,15 +14,11 @@ import {
   SETTLEMENT_STATUS_OPTIONS,
 } from '../../constants';
 import styles from '../../index.less';
-import type { SettlementQuery } from '../../types';
+import type { SettlementSearchValues } from '../../types';
 
-type SearchValues = Omit<
-  SettlementQuery,
-  'page' | 'pageSize' | 'includeDemo'
-> & { includeDemo?: string };
 type Props = {
   actionRef: MutableRefObject<ActionType | undefined>;
-  requestSettlements: (query: SettlementQuery) => Promise<{
+  requestSettlements: (query: SettlementSearchValues) => Promise<{
     data: YiyanchaAPI.SettlementHistory[];
     total: number;
     success: boolean;
@@ -30,11 +26,13 @@ type Props = {
   onAction: (action: string) => void;
 };
 
+/** 展示收益明细的筛选表单、分页列表及操作入口。 */
 export default function SettlementsTable({
   actionRef,
   requestSettlements,
   onAction,
 }: Props) {
+  // 页面支持的搜索字段与结算记录展示列。
   const columns: ProColumns<YiyanchaAPI.SettlementHistory>[] = [
     { title: '关键词', dataIndex: 'keyword', hideInTable: true },
     { title: '代理编号', dataIndex: 'agentId', hideInTable: true },
@@ -160,32 +158,12 @@ export default function SettlementsTable({
     },
   ];
   return (
-    <ProTable<YiyanchaAPI.SettlementHistory, SearchValues>
+    <ProTable<YiyanchaAPI.SettlementHistory, SettlementSearchValues>
       className={styles.table}
       rowKey="id"
       actionRef={actionRef}
       columns={columns}
-      request={(p) =>
-        requestSettlements({
-          keyword: p.keyword?.trim() || undefined,
-          agentId: p.agentId?.trim() || undefined,
-          agentName: p.agentName?.trim() || undefined,
-          amountMin: p.amountMin,
-          amountMax: p.amountMax,
-          periodLabel: p.periodLabel?.trim() || undefined,
-          periodStart: p.periodStart || undefined,
-          periodEnd: p.periodEnd || undefined,
-          reference: p.reference?.trim() || undefined,
-          orderId: p.orderId?.trim() || undefined,
-          createdFrom: p.createdFrom || undefined,
-          createdTo: p.createdTo || undefined,
-          status: p.status || undefined,
-          includeDemo:
-            p.includeDemo === undefined ? undefined : p.includeDemo === 'true',
-          page: p.current ?? 1,
-          pageSize: p.pageSize ?? PAGE_SIZE,
-        })
-      }
+      request={requestSettlements}
       pagination={{
         defaultPageSize: PAGE_SIZE,
         showSizeChanger: true,
@@ -195,6 +173,7 @@ export default function SettlementsTable({
       toolBarRender={() => [
         <Button
           key="export"
+          type="primary"
           icon={<DownloadOutlined />}
           onClick={() => onAction('导出')}
         >
