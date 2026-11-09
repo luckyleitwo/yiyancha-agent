@@ -4,7 +4,7 @@ import styles from './Brand.less';
 export default function Brand({ collapsed = false }: { collapsed?: boolean }) {
   return (
     <Link
-      to="/admin/dashboard"
+      to="/agent/dashboard"
       className={styles.brand}
       aria-label="亿眼查首页"
     >

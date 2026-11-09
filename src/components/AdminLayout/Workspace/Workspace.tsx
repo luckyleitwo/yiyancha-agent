@@ -13,7 +13,7 @@ export default function Workspace({
       </span>
       {!collapsed && (
         <div>
-          <strong>运营工作台</strong>
+          <strong>代理工作台</strong>
         </div>
       )}
     </div>

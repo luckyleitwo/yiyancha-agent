@@ -27,7 +27,7 @@ export default defineConfig({
   model: {},
   initialState: {},
   request: {},
-  title: '亿眼查 · 业务中台',
+  title: '亿眼查 · 代理端',
   favicons: ['/favicon.svg'],
   layout: {
     title: '亿眼查',

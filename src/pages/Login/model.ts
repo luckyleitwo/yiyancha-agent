@@ -7,6 +7,7 @@ export type LoginValues = Pick<
   'loginName' | 'password'
 >;
 
+// 登录固定使用代理端门户，并缓存服务端返回的会话信息。
 export default function useLoginModel() {
   const [loading, setLoading] = useState(false);
   const submitting = useRef(false);

@@ -15,7 +15,7 @@ interface Props {
 export default function Header({ onMenuClick, menuOpen }: Props) {
   const { currentMenu } = useContext(RouteContext);
   const [searchOpen, setSearchOpen] = useState(false);
-  const pageName = currentMenu?.name ?? '首页数据看板';
+  const pageName = currentMenu?.name ?? '首页看板';
   const { loading, submitLogout } = useLogout();
   const { initialState, setInitialState } = useModel('@@initialState');
   const user = initialState?.currentUser;
@@ -46,14 +46,14 @@ export default function Header({ onMenuClick, menuOpen }: Props) {
       )}
       <nav className={styles.breadcrumb} aria-label="面包屑">
         <LayoutIcon name="grid" />
-        <Link to="/admin/dashboard">工作空间</Link>
+        <Link to="/agent/dashboard">工作空间</Link>
         <span>/</span>
         <strong aria-current="page">{pageName}</strong>
       </nav>
       <div className={styles.actions}>
         <div className={styles.portalBadge}>
           <LayoutIcon name="layers" />
-          <strong>业务中台</strong>
+          <strong>代理端</strong>
         </div>
         <Tooltip title="搜索菜单">
           <button
@@ -106,7 +106,7 @@ export default function Header({ onMenuClick, menuOpen }: Props) {
             </span>
             <span>
               {userName}
-              <small>{user?.roles?.join('、') || '业务中台'}</small>
+              <small>{user?.roles?.join('、') || '代理端'}</small>
             </span>
           </button>
         </Popover>

@@ -1,5 +1,5 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { useModel } from '@umijs/max';
+import { history, useModel } from '@umijs/max';
 import { Button, Form, Input, message } from 'antd';
 import styles from './index.less';
 import type { LoginValues } from './model';
@@ -16,7 +16,7 @@ export default function Login() {
       return;
     }
     await refresh();
-    messageApi.success('登录成功，业务页面正在建设中');
+    history.replace('/agent/dashboard');
   };
 
   return (

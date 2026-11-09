@@ -1,0 +1,126 @@
+.page {
+  :global(.ant-pro-page-container-children-container) {
+    padding: 0;
+  }
+}
+
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 30px;
+  padding-top: 5px;
+
+  h1 {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  p {
+    margin: 6px 0 0;
+    color: #9294a6;
+    font-size: 12px;
+  }
+}
+
+.addButton {
+  height: 40px;
+  padding: 0 17px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #eceef4;
+  border-radius: 10px;
+  background: white;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px;
+
+  :global(.ant-input-affix-wrapper) {
+    width: 340px;
+    height: 42px;
+    max-width: 100%;
+  }
+
+  :global(.ant-select) {
+    width: 160px;
+    height: 42px;
+    font-size: 12px;
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+@media (max-width: 480px) {
+  .heading {
+    align-items: flex-start;
+  }
+
+  .filters {
+    padding: 15px;
+  }
+
+  .spacer {
+    display: none;
+  }
+}
+
+.table {
+  :global(.ant-table) {
+    font-size: 12px;
+  }
+
+  :global(.ant-table-thead > tr > th) {
+    color: #9294a6;
+    font-weight: 400;
+    background: #fafbfd;
+  }
+
+  :global(.ant-table-thead > tr > th::before) {
+    display: none;
+  }
+
+  :global(.ant-table-tbody > tr > td) {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+}
+
+// 原型状态标签的圆点与尺寸。
+.statusTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 10px;
+  line-height: normal;
+
+  &::before {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: currentcolor;
+    content: '';
+  }
+}
+
+.date {
+  margin-top: 5px;
+  color: #9294a6;
+  font-size: 10px;
+}

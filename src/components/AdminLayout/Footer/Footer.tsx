@@ -6,7 +6,7 @@ export default function Footer() {
       <span>© {new Date().getFullYear()} 亿眼查 · 企业核验平台</span>
       <span className={styles.footerStatus}>
         <span className={styles.statusDot} />
-        业务中台 · 布局预览
+        代理工作台
       </span>
     </footer>
   );
