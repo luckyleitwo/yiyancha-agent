@@ -1,0 +1,106 @@
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 134px;
+  margin-bottom: 22px;
+  padding: 24px 29px;
+  overflow: hidden;
+  border: 1px solid #e6dffc;
+  border-radius: 12px;
+  background: linear-gradient(100deg, #f0ebfe 0%, #f5f2fd 55%, #ece6fd 100%);
+
+  h2 {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-size: 23px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+  }
+
+  p {
+    position: relative;
+    z-index: 1;
+    margin: 8px 0 0;
+    color: #9991b1;
+    font-size: 12px;
+  }
+
+  > :global(.ant-btn) {
+    z-index: 1;
+    height: 40px;
+    margin-right: 220px;
+    margin-left: auto;
+    padding: 0 16px;
+    font-size: 12px;
+  }
+}
+
+.art {
+  position: absolute;
+  top: -25px;
+  right: 37px;
+  width: 245px;
+  height: 190px;
+  opacity: 0.7;
+  pointer-events: none;
+
+  circle,
+  path,
+  rect {
+    stroke: #c1b3ef;
+  }
+}
+
+@media (min-width: 1500px) {
+  .hero {
+    min-height: 148px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .hero > :global(.ant-btn) {
+    margin-right: 145px;
+  }
+
+  .art {
+    right: 8px;
+    width: 190px;
+  }
+}
+
+@media (max-width: 980px) {
+  .hero > :global(.ant-btn) {
+    margin-right: 0;
+  }
+
+  .hero h2 {
+    font-size: 20px;
+  }
+
+  .art {
+    opacity: 0.35;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    min-height: 130px;
+    padding: 20px;
+
+    > :global(.ant-btn) {
+      display: none;
+    }
+
+    p {
+      max-width: 220px;
+      font-size: 10px;
+    }
+  }
+
+  .art {
+    right: -50px;
+  }
+}
