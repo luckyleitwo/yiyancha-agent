@@ -279,6 +279,63 @@ declare namespace YiyanchaAPI {
     notes?: string;
   };
 
+  type agentRechargesParams = {
+    /** 页码，从1开始 */
+    page?: string;
+    /** 每页条数，最大100 */
+    pageSize?: string;
+    /** 可选状态筛选；省略时查询当前数据范围内全部状态 */
+    status?: string;
+    /** 企业编号筛选；仅 ADMIN 财务列表使用 */
+    companyId?: string;
+    /** 代理编号筛选；仅 ADMIN 财务列表使用 */
+    agentId?: string;
+    /** 资金方向筛选；账户流水仅支持 IN、OUT、PENDING、FREEZE、UNFREEZE */
+    direction?: string;
+    /** 提现收款账户完整值精确筛选；服务端转换为HMAC盲索引 */
+    bankAccount?: string;
+    /** 是否包含示例记录 */
+    includeDemo?: string;
+    /** 可选关键字；根据接口用途匹配名称或编号 */
+    keyword?: string;
+    /** 企业名称模糊筛选 */
+    companyName?: string;
+    /** 代理名称模糊筛选 */
+    agentName?: string;
+    /** 充值金额下限 */
+    amountMin?: string;
+    /** 充值金额上限 */
+    amountMax?: string;
+    /** 支付方式精确筛选 */
+    paymentMethod?: string;
+    /** 支付凭证编号模糊筛选 */
+    paymentReference?: string;
+    /** 充值日期起 */
+    paymentDateFrom?: string;
+    /** 充值日期止 */
+    paymentDateTo?: string;
+    /** 发票类型精确筛选 */
+    invoiceType?: string;
+    /** 发票号码模糊筛选 */
+    invoiceNo?: string;
+    /** 付款参考号模糊筛选 */
+    payoutReference?: string;
+    /** 结算周期模糊筛选 */
+    periodLabel?: string;
+    /** 资金记录创建日期起 */
+    createdFrom?: string;
+    /** 资金记录创建日期止 */
+    createdTo?: string;
+    /** 结算周期开始日期精确筛选 */
+    periodStart?: string;
+    /** 结算周期结束日期精确筛选 */
+    periodEnd?: string;
+    /** 结算关联订单编号精确筛选 */
+    orderId?: string;
+    /** 结算参考号模糊筛选 */
+    reference?: string;
+  };
+
   type AgentSettlementRequest = {
     /** 本次申请幂等UUID，重试沿用 */
     requestId: string;
@@ -1193,6 +1250,31 @@ declare namespace YiyanchaAPI {
     companyId?: string;
     /** 本申请的证件附件，最多 5 份且每份最大 5 MiB */
     documents: CertificationFile[];
+  };
+
+  type certificationsParams = {
+    /** 页码，从 1 开始，最大 1000000 */
+    page?: number;
+    /** 每页记录数，最大 100 */
+    size?: number;
+    /** 认证主体类型：person 或 company；不传表示全部 */
+    subjectType?: string;
+    /** 认证状态：draft、pending、approved 或 rejected；不传表示全部 */
+    status?: string;
+    /** 申请人姓名完整值；使用盲索引精确匹配 */
+    applicantName?: string;
+    /** 申请人手机号完整值；使用盲索引精确匹配 */
+    applicantPhone?: string;
+    /** 证件号完整值；使用盲索引精确匹配 */
+    identity?: string;
+    /** 材料数量最小值，0到5 */
+    minDocuments?: number;
+    /** 材料数量最大值，0到5 */
+    maxDocuments?: number;
+    /** 提交时间起始，ISO日期时间 */
+    submittedFrom?: string;
+    /** 提交时间截止，ISO日期时间 */
+    submittedTo?: string;
   };
 
   type ChangePassword = {
@@ -2291,6 +2373,63 @@ declare namespace YiyanchaAPI {
   };
 
   type ownSettlementsParams = {
+    /** 页码，从1开始 */
+    page?: string;
+    /** 每页条数，最大100 */
+    pageSize?: string;
+    /** 可选状态筛选；省略时查询当前数据范围内全部状态 */
+    status?: string;
+    /** 企业编号筛选；仅 ADMIN 财务列表使用 */
+    companyId?: string;
+    /** 代理编号筛选；仅 ADMIN 财务列表使用 */
+    agentId?: string;
+    /** 资金方向筛选；账户流水仅支持 IN、OUT、PENDING、FREEZE、UNFREEZE */
+    direction?: string;
+    /** 提现收款账户完整值精确筛选；服务端转换为HMAC盲索引 */
+    bankAccount?: string;
+    /** 是否包含示例记录 */
+    includeDemo?: string;
+    /** 可选关键字；根据接口用途匹配名称或编号 */
+    keyword?: string;
+    /** 企业名称模糊筛选 */
+    companyName?: string;
+    /** 代理名称模糊筛选 */
+    agentName?: string;
+    /** 充值金额下限 */
+    amountMin?: string;
+    /** 充值金额上限 */
+    amountMax?: string;
+    /** 支付方式精确筛选 */
+    paymentMethod?: string;
+    /** 支付凭证编号模糊筛选 */
+    paymentReference?: string;
+    /** 充值日期起 */
+    paymentDateFrom?: string;
+    /** 充值日期止 */
+    paymentDateTo?: string;
+    /** 发票类型精确筛选 */
+    invoiceType?: string;
+    /** 发票号码模糊筛选 */
+    invoiceNo?: string;
+    /** 付款参考号模糊筛选 */
+    payoutReference?: string;
+    /** 结算周期模糊筛选 */
+    periodLabel?: string;
+    /** 资金记录创建日期起 */
+    createdFrom?: string;
+    /** 资金记录创建日期止 */
+    createdTo?: string;
+    /** 结算周期开始日期精确筛选 */
+    periodStart?: string;
+    /** 结算周期结束日期精确筛选 */
+    periodEnd?: string;
+    /** 结算关联订单编号精确筛选 */
+    orderId?: string;
+    /** 结算参考号模糊筛选 */
+    reference?: string;
+  };
+
+  type ownWithdrawalsParams = {
     /** 页码，从1开始 */
     page?: string;
     /** 每页条数，最大100 */

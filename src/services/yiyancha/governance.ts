@@ -6,6 +6,29 @@ function request<T>(url: string, options?: RequestOptions) {
   return serviceRequest<T>('yiyancha', url, options);
 }
 
+/** 分页查询认证记录 **作用：**读取当前企业、当前代理范围内的认证台账；ADMIN 可查看全部。鉴权后返回姓名、手机号、证件号码明文和材料数量，不返回密文。**时机：**认证记录页加载或翻页时调用。**用法：**GET 并传 page、size、subjectType、status。响应 no-store。**权限：**三端均需 governance:certification:read；个人认证仅提交账号本人可见。 GET /api/v1/governance/certifications */
+export async function certifications(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: YiyanchaAPI.certificationsParams,
+  options?: RequestOptions,
+) {
+  return request<YiyanchaAPI.ApiResponsePageCertification>(
+    '/api/v1/governance/certifications',
+    {
+      method: 'GET',
+      params: {
+        // page has a default value: 1
+        page: '1',
+        // size has a default value: 20
+        size: '20',
+
+        ...params,
+      },
+      ...(options || {}),
+    },
+  );
+}
+
 /** 分页查询渠道 **作用：**读取渠道关联供应商、编码和状态，不返回渠道密钥或密文。**时机：**渠道配置页面加载。**用法：**GET page、size。**权限：**仅 ADMIN 且需 governance:channel:read；支持 code（编码包含匹配）、status（active/disabled）、supplierId（精确匹配）。筛选只影响 total，不影响 scopeTotal。 GET /api/v1/governance/channels */
 export async function channels(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

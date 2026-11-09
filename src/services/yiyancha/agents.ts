@@ -34,3 +34,21 @@ export async function listOrders1(
     ...(options || {}),
   });
 }
+
+/** 查询代理客户充值记录 作用：分页读取当前代理树所辖企业的充值记录及已鉴权后解密的付款凭证。调用时机：代理首页资金记录及客户充值记录页。调用方式：GET /api/v1/agents/recharges?page=1&pageSize=20&keyword=&status=&includeDemo=false；仅 AGENT 门户及 finance:agent:recharge:read 权限可用，主体范围取自会话。 GET /api/v1/agents/recharges */
+export async function agentRecharges(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: YiyanchaAPI.agentRechargesParams,
+  options?: RequestOptions,
+) {
+  return request<YiyanchaAPI.ApiResponsePageRechargeView>(
+    '/api/v1/agents/recharges',
+    {
+      method: 'GET',
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    },
+  );
+}

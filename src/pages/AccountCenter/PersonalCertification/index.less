@@ -1,0 +1,76 @@
+.page {
+  :global(.ant-pro-page-container-children-container) {
+    padding: 0;
+  }
+}
+
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 30px;
+  padding-top: 5px;
+
+  h1 {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  p {
+    margin: 6px 0 0;
+    color: #9294a6;
+    font-size: 12px;
+  }
+}
+
+.eyebrow {
+  margin-bottom: 6px;
+  color: #6954d9;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.7px;
+}
+
+.addButton {
+  height: 40px;
+  padding: 0 17px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.table {
+  :global(.ant-table) {
+    font-size: 12px;
+  }
+
+  :global(.ant-table-thead > tr > th) {
+    color: #9294a6;
+    font-weight: 400;
+    background: #fafbfd;
+  }
+
+  :global(.ant-table-thead > tr > th::before) {
+    display: none;
+  }
+
+  :global(.ant-table-tbody > tr > td) {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+}
+
+.secondary {
+  margin-top: 4px;
+  color: #9294a6;
+  font-size: 11px;
+}
+
+@media (max-width: 480px) {
+  .heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+}

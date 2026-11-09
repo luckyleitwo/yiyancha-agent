@@ -92,6 +92,24 @@ const routes: Routes = [
         component: './BusinessRevenue/Settlements',
         layoutIcon: 'coins',
       },
+      {
+        name: '结算与提现',
+        path: '/BusinessRevenue/Withdrawals',
+        component: './BusinessRevenue/Withdrawals',
+        layoutIcon: 'wallet',
+      },
+    ],
+  },
+  {
+    name: '账号中心',
+    path: '/AccountCenter',
+    routes: [
+      {
+        name: '个人实名认证',
+        path: '/AccountCenter/PersonalCertification',
+        component: './AccountCenter/PersonalCertification',
+        layoutIcon: 'shield',
+      },
     ],
   },
 ];

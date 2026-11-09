@@ -56,6 +56,7 @@ const services: ServiceConfig[] = [
       { path: 'catalog/products', method: 'GET' },
       { path: 'governance/channels', method: 'GET' },
       { path: 'governance/contracts', method: 'GET' },
+      { path: 'governance/certifications', method: 'GET' },
       { path: 'governance/suppliers', method: 'GET' },
       { path: 'governance/templates', method: 'GET' },
       { path: 'identity/audit-logs', method: 'GET' },
@@ -64,7 +65,9 @@ const services: ServiceConfig[] = [
       { path: 'identity/users', method: 'GET' },
       { path: 'system/health', method: 'GET' },
       { path: 'agents/orders', method: 'GET' },
+      { path: 'agents/recharges', method: 'GET' },
       { path: 'finance/ownSettlements', method: 'GET' },
+      { path: 'finance/withdrawals', method: 'GET' },
     ],
   },
 ];

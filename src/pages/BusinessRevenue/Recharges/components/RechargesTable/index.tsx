@@ -10,14 +10,11 @@ import { Button, Space, Tag } from 'antd';
 import type { MutableRefObject } from 'react';
 import { PAGE_SIZE, RECHARGE_STATUSES } from '../../constants';
 import styles from '../../index.less';
-import type { RechargeQuery } from '../../types';
+import type { RechargeSearchValues } from '../../types';
 
-type SearchValues = Omit<RechargeQuery, 'page' | 'pageSize' | 'includeDemo'> & {
-  includeDemo?: string;
-};
 type Props = {
   actionRef: MutableRefObject<ActionType | undefined>;
-  requestRecharges: (query: RechargeQuery) => Promise<{
+  requestRecharges: (query: RechargeSearchValues) => Promise<{
     data: YiyanchaAPI.RechargeView[];
     total: number;
     success: boolean;
@@ -25,11 +22,13 @@ type Props = {
   onAction: (action: string) => void;
 };
 
+/** 展示客户充值记录的筛选、分页和操作入口。 */
 export default function RechargesTable({
   actionRef,
   requestRecharges,
   onAction,
 }: Props) {
+  // 搜索字段与充值记录的展示列。
   const columns: ProColumns<YiyanchaAPI.RechargeView>[] = [
     { title: '关键词', dataIndex: 'keyword', hideInTable: true },
     {
@@ -153,28 +152,12 @@ export default function RechargesTable({
     },
   ];
   return (
-    <ProTable<YiyanchaAPI.RechargeView, SearchValues>
+    <ProTable<YiyanchaAPI.RechargeView, RechargeSearchValues>
       className={styles.table}
       rowKey="id"
       actionRef={actionRef}
       columns={columns}
-      request={(p) =>
-        requestRecharges({
-          keyword: p.keyword?.trim() || undefined,
-          companyName: p.companyName?.trim() || undefined,
-          amountMin: p.amountMin,
-          amountMax: p.amountMax,
-          paymentMethod: p.paymentMethod?.trim() || undefined,
-          paymentReference: p.paymentReference?.trim() || undefined,
-          paymentDateFrom: p.paymentDateFrom || undefined,
-          paymentDateTo: p.paymentDateTo || undefined,
-          includeDemo:
-            p.includeDemo === undefined ? undefined : p.includeDemo === 'true',
-          status: p.status || undefined,
-          page: p.current ?? 1,
-          pageSize: p.pageSize ?? PAGE_SIZE,
-        })
-      }
+      request={requestRecharges}
       pagination={{
         defaultPageSize: PAGE_SIZE,
         showSizeChanger: true,
