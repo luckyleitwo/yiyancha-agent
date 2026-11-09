@@ -1,0 +1,37 @@
+.page {
+  padding: 4px 0 24px;
+}
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.heading h1 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 650;
+}
+.heading p {
+  margin: 0;
+  color: #747589;
+}
+.createdAt {
+  display: block;
+  margin-top: 4px;
+  color: #9294a6;
+}
+@media (max-width: 600px) {
+  .heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+.card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #eceef4;
+  border-radius: 10px;
+  background: white;
+}
